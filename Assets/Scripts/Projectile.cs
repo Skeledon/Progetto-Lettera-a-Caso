@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TESTNEWProjectil : MonoBehaviour
+public class Projectile : MonoBehaviour
 {
     public LayerMask collisionMask;
 
