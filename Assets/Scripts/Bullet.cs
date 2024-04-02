@@ -6,8 +6,14 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField]
     private float _speed;
-    // Start is called before the first frame update
 
+    [SerializeField]
+    private float _timeBeforeSelfDestruct = 10;
+    // Start is called before the first frame update
+    private void Start()
+    {
+        StartCoroutine(CountdownToDestruction());
+    }
 
     private void FixedUpdate()
     {
@@ -24,5 +30,11 @@ public class Bullet : MonoBehaviour
             float angle = Vector2.SignedAngle(transform.up, newSpeed);
             transform.Rotate(Vector3.forward, angle);
         }
+    }
+
+    IEnumerator CountdownToDestruction()
+    {
+        yield return new WaitForSeconds(_timeBeforeSelfDestruct);
+        Destroy(gameObject);
     }
 }

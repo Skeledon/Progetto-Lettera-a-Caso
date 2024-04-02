@@ -5,29 +5,66 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     //Player movement
-    public float playerSpeed;
-    public Vector2 moveInput;
-    [HideInInspector] public Rigidbody2D playerRb;
+    [SerializeField]
+    private float _playerSpeed;
+
+    [SerializeField]
+    private Vector2 _moveInput;
+
+    [SerializeField]
+    private AttacksController _attackController;
+
+    [HideInInspector] public Rigidbody2D _playerRb;
+
+
+
     void Start()
     {
-        playerRb = this.gameObject.GetComponent<Rigidbody2D>();
+        _playerRb = this.gameObject.GetComponent<Rigidbody2D>();
 
+    }
+
+    private void Update()
+    {
+        GetInput();
+        IncreaseEnergy();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        moveInput.x = Input.GetAxisRaw("Horizontal");
-        moveInput.y = Input.GetAxisRaw("Vertical");
-        moveInput.Normalize();
+        GetFixedInput();
 
-        playerRb.velocity = moveInput * playerSpeed;
+        _moveInput.Normalize();
 
-        if (moveInput != Vector2.zero)
+        _playerRb.velocity = _moveInput * _playerSpeed;
+
+        if (_moveInput != Vector2.zero)
         {
-            float angle = Mathf.Atan2(moveInput.y, moveInput.x) * Mathf.Rad2Deg;
+            float angle = Mathf.Atan2(_moveInput.y, _moveInput.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         }
 
+    }
+
+    private void GetInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            //TODO Temporary. Index needed in case of future multiple attacks
+            _attackController.TryAttack(0);
+        }
+    }
+    private void GetFixedInput()
+    {
+        _moveInput.x = Input.GetAxisRaw("Horizontal");
+        _moveInput.y = Input.GetAxisRaw("Vertical");
+
+    }
+
+    private void IncreaseEnergy()
+    {
+        //TODO Temporary, just for debug
+        _attackController.IncreaseEnergy(20 * Time.deltaTime);
     }
 }
